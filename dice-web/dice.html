@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Dice Simulator</title>
+</head>
+<body>
+  <h1>Dice Simulator</h1>
+  
+  <table id="controls">
+    <tbody>
+      <tr>
+        <td><label for="numDice">Number of dice:</label></td>
+        <td><input type="number" id="numDice" min="1" value="1" /></td>
+      </tr>
+      <tr>
+        <td><label for="numRolls">Number of rolls:</label></td>
+        <td><input type="number" id="numRolls" min="1" value="1" /></td>
+      </tr>
+      <tr>
+        <td><label for="numSides">Number of sides:</label></td>
+        <td><input type="number" id="numSides" min="2" value="6" /></td>
+      </tr>
+    </tbody>  
+  </table>
+
+  <button id="simulateBtn">Simulate</button>
+
+  <div id="stats">
+  </div>
+  <details>
+    <summary>Results</summary>
+    <ul id="rollList"></ul>
+  </details>
+  <script>
+      const numDiceInput = document.getElementById("numDice");
+      const numRollsInput = document.getElementById("numRolls");
+      const numSidesInput = document.getElementById("numSides");
+      const simulateBtn = document.getElementById("simulateBtn");
+      const statsDiv = document.getElementById("stats"); 
+
+      function rollDie(numSides) {
+        return Math.floor(Math.random() * numSides) + 1;
+      }
+
+      function roll(numDice, numSides) {
+        let dice = [];
+        for (let i = 0; i < numDice; i++) {
+          dice.push(rollDie(numSides));
+        }
+        return dice;
+      }
+
+      function calculateStats(rolls) {
+        let sum = rolls.reduce((acc, val) => acc + val, 0);
+        let min = Math.min(...rolls);
+        let max = Math.max(...rolls);
+
+        rolls.sort((a, b) => a - b);
+        let mid = Math.floor(rolls.length / 2);
+        let median = rolls.length % 2 !== 0 ? rolls[mid] : (rolls[mid - 1] + rolls[mid]) / 2;
+
+        let counts = {}, mostCommonCount = 0, mostCommonRolls = [];
+        for (let val of rolls) {
+          counts[val] = (counts[val] || 0) + 1;
+          if (counts[val] > mostCommonCount) {
+            mostCommonCount = counts[val];
+            mostCommonRolls = [];
+          }
+          if (counts[val] == mostCommonCount) {
+            mostCommonRolls.push(val);
+          }
+        }
+
+        return {
+          'Min': min, 'Mean': (sum / rolls.length).toFixed(2),
+          'Median': median,
+          'Mode': {count: mostCommonCount, values: mostCommonRolls},
+          'Max': max
+        };
+      }
+
+      simulateBtn.addEventListener('click', () => {
+        // Clear old results
+        rollList.innerHTML = "";
+        statsDiv.innerHTML = "";
+        
+        const numDice = parseInt(numDiceInput.value);
+        const numRolls = parseInt(numRollsInput.value);
+        const numSides = parseInt(numSidesInput.value);
+
+        let doubleCount = 0;
+        let rolls = [];
+
+        for (let i = 0; i < numRolls; i++) {
+          const dice = roll(numDice, numSides); 
+          // if n-of-a-kind ("doubles"), increment doubleCount
+          //if (dice.every(x => x === dice[0])) {
+          if ( (new Set(dice)).size == 1) {
+            doubleCount++;
+          }
+
+          const thisRoll = dice.reduce((acc,x) => acc + x, 0);
+          const li = document.createElement("li");
+          li.textContent = `Roll ${i+1}: ${dice.join(' ')} \t (${thisRoll})`;
+          rollList.appendChild(li);
+
+          rolls.push(thisRoll);
+        };
+
+        
+        const stats = calculateStats(rolls);
+        stats['Number of "doubles"'] = doubleCount;
+        
+        for (let [label, value] of Object.entries(stats)) {
+          p = document.createElement("p");
+          
+          if (label === 'Mode') {
+            p.textContent += `${label}: ${value.values.join(', ')} (each appeared ${value.count} times)`;
+          } else {
+            p.textContent = `${label}: ${value}`;
+          }
+          statsDiv.appendChild(p);
+        }
+     });
+  </script>
+</body>
+</html>

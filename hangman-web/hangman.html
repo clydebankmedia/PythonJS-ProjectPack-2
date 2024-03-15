@@ -158,10 +158,9 @@
       $("#guessLetterInput").val("");
       $("#guessLetterInput").focus();
       if (!guess) {
-        $("#errorMessage").html('Please enter a letter.’);
+        $("#errorMessage").html('Please enter a letter.');
        return;
       }
-
 
       if (!/[a-z]/.test(guess)) {
         $("#errorMessage").html('Please enter a letter.');

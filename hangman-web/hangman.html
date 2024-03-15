@@ -157,14 +157,10 @@
       const guess = $("#guessLetterInput").val().toLowerCase();
       $("#guessLetterInput").val("");
       $("#guessLetterInput").focus();
-      if (!guess) {
+      
+      if (!guess || !/[a-z]/.test(guess)) {
         $("#errorMessage").html('Please enter a letter.');
        return;
-      }
-
-      if (!/[a-z]/.test(guess)) {
-        $("#errorMessage").html('Please enter a letter.');
-        return;
       }
 
       if (!gameState.guessedLetters.includes(guess)) {

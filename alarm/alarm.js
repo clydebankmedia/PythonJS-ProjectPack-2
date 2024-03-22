@@ -74,6 +74,6 @@ function activateAlarm() {
 document.addEventListener("DOMContentLoaded", resetAlarmForm);
 alarmForm = document.forms['alarmForm']
 alarmForm.addEventListener('submit', addAlarm);
-alarmForm.addEventListener('change', checkAlarmValidity);
+alarmForm.addEventListener('focusout', checkAlarmValidity);
 
 document.getElementById("cancelBtn").addEventListener('click', cancelAlarm);

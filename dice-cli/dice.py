@@ -26,8 +26,11 @@ args = parser.parse_args()
 
 # You can pass a function to the `type` argument in `add_argument` to
 # make this a bit cleaner.
-if args.num_rolls < 0 or args.num_sides < 0 or args.num_dice < 0:
-  print("All dice options require positive integers.")
+if args.num_rolls <= 0 or args.num_dice <= 0:
+  print("Number of rolls and number of dice require positive integers.")
+  exit(1)
+if args.num_sides < 2:
+  print("Number of sides must be at least 2.")
   exit(1)
 
 total, doubles = 0, 0

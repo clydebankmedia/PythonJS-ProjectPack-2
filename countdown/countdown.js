@@ -7,7 +7,7 @@ const SECS_PER_DAY = 24 * SECS_PER_HOUR;
 const SECS_PER_MONTH = 30 * SECS_PER_DAY;
 const SECS_PER_YEAR = 365 * SECS_PER_DAY;
 
-function display(diff) {
+function displayCountdown(diff) {
     diff = Math.floor(diff / 1000); // convert from milliseconds to seconds
     const years = Math.floor(diff / SECS_PER_YEAR);
     diff -= years * SECS_PER_YEAR;
@@ -23,7 +23,7 @@ function display(diff) {
 
     document.getElementById("years").innerHTML = `${years} year` + (years > 1 ? "s" : "");
     document.getElementById("months").innerHTML = `${months} month` + (months > 1 ? "s" : "");
-    document.getElementById("days").innerHTML = `${days} days` + (days > 1 ? "s" : "");
+    document.getElementById("days").innerHTML = `${days} day` + (days > 1 ? "s" : "");
     document.getElementById("hours").innerHTML = `${hours}`.padStart(2, "0") + ':';
     document.getElementById("minutes").innerHTML = `${minutes}`.padStart(2, "0") + ':';
     document.getElementById("seconds").innerHTML = `${seconds}`.padStart(2, "0");
@@ -54,17 +54,17 @@ function display(diff) {
 
 function updateTimer() {
     const now = new Date();
-    if (!deadline) {
+    if (!deadline || isNan(deadline)) {
         resetTimer();
         return;
     }
     if (deadline < now) {
         stopTimer();
-        display(0);
+        displayCountdown(0);
         document.getElementById("countdown").style.color = "red";
         document.getElementById("countdown").classList.add("blink");
     } else {
-        display(deadline - now);
+        displayCountdown(deadline - now);
     }
 }
 
@@ -78,7 +78,7 @@ function startTimer() {
     const [year, month, day] = document.getElementById("date").value.split("-").map(x => parseInt(x));
     const time = document.getElementById("time").value;
     const [hours, minutes] = time.split(":");
-    deadline = new Date(year, month - 1, day, hours, minutes);
+    deadline = new Date(year, month - 1, day, hours, minutes); // Date uses zero-indexed months
     intervalId = setInterval(updateTimer, updateInterval);
 }
 

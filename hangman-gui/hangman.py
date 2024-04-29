@@ -1,10 +1,10 @@
 import sys
 from enum import Enum, auto
 import requests # for random word generation
-from PySide2.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, \
+from PySide6.QtWidgets import QApplication, QWidget, QLabel, QLineEdit, \
     QPushButton, QVBoxLayout, QMessageBox, QCheckBox, QMainWindow, QStackedWidget
-from PySide2.QtGui import QRegExpValidator
-from PySide2.QtCore import QRegExp
+from PySide6.QtGui import QRegularExpressionValidator
+from PySide6.QtCore import QRegularExpression
 
 class HangmanGame:
     class GameStatus(Enum):
@@ -71,7 +71,7 @@ class HangmanUI(QMainWindow):
         header_lbl.setStyleSheet("font-size: 24px; font-weight: bold;")
 
         self.num_guesses_input = QLineEdit()
-        self.num_guesses_input.setValidator(QRegExpValidator(QRegExp(r'^\d{1,2}$')))
+        self.num_guesses_input.setValidator(QRegularExpressionValidator(QRegularExpression(r'^\d{1,2}$')))
         self.prevent_dup_chk = QCheckBox("Prevent &Duplicate Guesses")
         self.prevent_dup_chk.setChecked(True)
         self.show_prev_chk = QCheckBox("Show &Previous Guesses")
@@ -79,10 +79,10 @@ class HangmanUI(QMainWindow):
 
         self.chosen_word_input = QLineEdit()
         self.chosen_word_input.setPlaceholderText('Leave blank for random word')
-        self.chosen_word_input.setValidator(QRegExpValidator(QRegExp(r'^[a-zA-Z]+$')))
+        self.chosen_word_input.setValidator(QRegularExpressionValidator(QRegularExpression(r'^[a-zA-Z]+$')))
         self.word_length_input = QLineEdit()
         self.word_length_input.setPlaceholderText('Leave blank to use chosen word above')
-        self.word_length_input.setValidator(QRegExpValidator(QRegExp(r'^\d{1,2}$')))
+        self.word_length_input.setValidator(QRegularExpressionValidator(QRegularExpression(r'^\d{1,2}$')))
         
         self.start_button = QPushButton('Start Game')
         self.start_button.clicked.connect(self.start_game)
@@ -113,7 +113,7 @@ class HangmanUI(QMainWindow):
 
         self.guess_input = QLineEdit()
         self.guess_input.returnPressed.connect(self.guess)
-        self.guess_input.setValidator(QRegExpValidator(QRegExp('[a-zA-Z]+')))
+        self.guess_input.setValidator(QRegularExpressionValidator(QRegularExpression('[a-zA-Z]+')))
         self.guess_btn = QPushButton('Guess Letter')
         self.guess_btn.clicked.connect(self.guess)
         
@@ -212,4 +212,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ui = HangmanUI()
     ui.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

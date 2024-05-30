@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dice Roll Simulator</title>
+</head>
+<body>
+  <h1>Dice Roll Simulator</h1>
+  
+  <form name="diceControlForm">
+    <table id="controls">
+      <tbody>
+        <tr>
+          <td><label for="numDice">Number of dice:</label></td>
+          <td><input type="number" name="numDice" value="1"></td>
+        </tr>
+        <tr>
+          <td><label for="numRolls">Number of rolls:</label></td>
+          <td><input type="number" name="numRolls" value="1"></td>
+        </tr>
+        <tr>
+          <td><label for="numSides">Number of sides:</label></td>
+          <td><input type="number" name="numSides" value="6"></td>
+        </tr>
+      </tbody>  
+    </table>
+    <button type="submit">Simulate</button>
+  </form>
+  
+  <div id="stats">
+  </div>
+  <details>
+    <summary>Results</summary>
+    <ul id="rollList"></ul>
+  </details>
+
+  <script>
+    function rollDie(numSides) {
+      return Math.floor(Math.random() * numSides) + 1;
+    }
+    
+    function roll(numDice, numSides) {
+      // This is concise, but hard for beginners. See if you can figure it out!
+      // return [...Array(numDice).keys()].map(_ => rollDie(numSides));
+      
+      let dice = [];
+      for (let i = 0; i < numDice; i++) {
+        dice.push(rollDie(numSides));
+      }
+      return dice;
+    }
+
+    document.forms['diceControlForm'].addEventListener("submit", (event) => {
+      event.preventDefault(); // we're not actually submitting anything to a server
+    
+      const form = event.target;
+      const statsDiv = document.getElementById("stats");
+      const rollList = document.getElementById("rollList");
+      
+      // Clear old results
+      rollList.innerHTML = "";
+      statsDiv.innerHTML = "";
+      
+      const numDice = parseInt(form.elements.numDice.value);
+      const numRolls = parseInt(form.elements.numRolls.value);
+      const numSides = parseInt(form.elements.numSides.value);
+    
+      for (let i = 0; i < numRolls; i++) {
+        const dice = roll(numDice, numSides);
+    
+    
+        // You might see a concise line like this in codebases that like
+        // functional programming. Lookup `reduce` and see if you can
+        // figure it out!
+        // 
+        // const thisRollTotal = dice.reduce((acc,val) => acc + val, 0);
+    
+        // Here is a more straightforward version:
+        let thisRollTotal = 0; // Initialize the 'accumulator' (acc) to 0.
+        for (let val of dice) {
+          thisRollTotal += val;
+        }
+        
+        const li = document.createElement("li");
+        li.textContent = `Roll ${i+1}: ${dice.join(' ')} \t (${thisRollTotal})`;
+        rollList.appendChild(li);
+      };
+    });
+  </script>
+</body>
+</html>

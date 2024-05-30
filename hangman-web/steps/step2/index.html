@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hangman Game</title>
+    <style>
+      .hangman-image {
+          width: 200px;
+          height: 200px;
+          background: #eee;
+      }
+      
+      .unguessed {
+          color: red;
+          font-weight: bold;
+          text-decoration: underline;
+      }
+      
+      input.error {
+          border: 3px solid red;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  </head>
+  <body>
+    <h1>Hangman Game</h1>
+
+    <p style="color: red;" id="errorMessage"></p>
+    
+    <div id="previewScreenDiv">
+      <h2>Game Options</h2>
+      <label for="numGuessesInput">Number of Guesses Allowed:</label>
+      <input type="number" id="numGuessesInput" min="1" max="20" value="6"><br>
+    
+      <label for="preventDupGuessesChk">Prevent Duplicate Guesses:</label>
+      <input type="checkbox" id="preventDupGuessesChk"><br>
+    
+      <label for="showPrevGuessesChk">Show Previous Guesses:</label>
+      <input type="checkbox" id="showPrevGuessesChk"><br>
+    
+      <label for="showHangmanChk">Show Hangman:</label>
+      <input type="checkbox" id="showHangmanChk" checked><br>
+    
+      <label for="chosenWordInput">Word to Guess (leave empty to randomly generate):</label>
+      <input type="text" id="chosenWordInput"><br>
+    
+      <label for="wordLengthInput">Word Length (for random generation):</label>
+      <input type="number" id="wordLengthInput" min="2" max="15" value="5"><br>
+    
+      <button id="startBtn">Start Game</button>
+    </div>
+    
+    <div id="gameScreenDiv" style="display: none;">
+      <button id="restartBtn">Restart</button>
+    
+      <!-- Placeholder image link for Hangman stick figures. Replace this
+      with your actual image or use a different placeholder. -->
+      <div id="hangmanImageDiv" class="hangman-image"></div>
+      <h3>Guesses Remaining: <span id="guessesRemainingSpan"></span></h3>
+      <div id="wordDisplayDiv"></div>
+    
+      <div id="prevGuessesDiv">
+        <label for="guessedLettersSpan">Guessed Letters:</label>
+        <span id="guessedLettersSpan"></span>
+        <br>
+        <label for="guessedWordsSpan">Guessed Words:</label>
+        <span id="guessedWordsSpan"></span>
+      </div>
+      <div id="guessInputsDiv">
+        <label for="guessLetterInput">Guess a letter:</label>
+        <input type="text" id="guessLetterInput" maxlength="1">
+        <button id="guessLetterBtn">Guess</button>
+        <br>
+        <label for="guessWordInput">Guess the whole word:</label>
+        <input type="text" id="guessWordInput">
+        <button id="guessWordBtn">Guess Whole Word</button>
+      </div>
+    </div>
+  </body>
+</html>

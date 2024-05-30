@@ -1,0 +1,11 @@
+/* Put this in <head> of your HTML, or in a separate file like
+   'styles.css' and link to it in your HTML <head> */
+.blink {
+    animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1.0; }
+    50% { opacity: 0.0; }
+    100% { opacity: 1.0; }
+}

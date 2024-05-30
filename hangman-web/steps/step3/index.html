@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hangman Game</title>
+    <style>
+      .hangman-image {
+          width: 200px;
+          height: 200px;
+          background: #eee;
+      }
+      
+      .unguessed {
+          color: red;
+          font-weight: bold;
+          text-decoration: underline;
+      }
+      
+      input.error {
+          border: 3px solid red;
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  </head>
+  <body>
+    <h1>Hangman Game</h1>
+
+    <p style="color: red;" id="errorMessage"></p>
+    
+    <div id="previewScreenDiv">
+      <h2>Game Options</h2>
+      <label for="numGuessesInput">Number of Guesses Allowed:</label>
+      <input type="number" id="numGuessesInput" min="1" max="20" value="6"><br>
+    
+      <label for="preventDupGuessesChk">Prevent Duplicate Guesses:</label>
+      <input type="checkbox" id="preventDupGuessesChk"><br>
+    
+      <label for="showPrevGuessesChk">Show Previous Guesses:</label>
+      <input type="checkbox" id="showPrevGuessesChk"><br>
+    
+      <label for="showHangmanChk">Show Hangman:</label>
+      <input type="checkbox" id="showHangmanChk" checked><br>
+    
+      <label for="chosenWordInput">Word to Guess (leave empty to randomly generate):</label>
+      <input type="text" id="chosenWordInput"><br>
+    
+      <label for="wordLengthInput">Word Length (for random generation):</label>
+      <input type="number" id="wordLengthInput" min="2" max="15" value="5"><br>
+    
+      <button id="startBtn">Start Game</button>
+    </div>
+    
+    <div id="gameScreenDiv" style="display: none;">
+      <button id="restartBtn">Restart</button>
+    
+      <!-- Placeholder image link for Hangman stick figures. Replace this
+      with your actual image or use a different placeholder. -->
+      <div id="hangmanImageDiv" class="hangman-image"></div>
+      <h3>Guesses Remaining: <span id="guessesRemainingSpan"></span></h3>
+      <div id="wordDisplayDiv"></div>
+    
+      <div id="prevGuessesDiv">
+        <label for="guessedLettersSpan">Guessed Letters:</label>
+        <span id="guessedLettersSpan"></span>
+        <br>
+        <label for="guessedWordsSpan">Guessed Words:</label>
+        <span id="guessedWordsSpan"></span>
+      </div>
+      <div id="guessInputsDiv">
+        <label for="guessLetterInput">Guess a letter:</label>
+        <input type="text" id="guessLetterInput" maxlength="1">
+        <button id="guessLetterBtn">Guess</button>
+        <br>
+        <label for="guessWordInput">Guess the whole word:</label>
+        <input type="text" id="guessWordInput">
+        <button id="guessWordBtn">Guess Whole Word</button>
+      </div>
+    </div>
+
+    <script>
+      let gameState; // global shared state
+      
+      function resetState() {
+        let state = {};
+        state.remainingGuesses = parseInt($("#numGuessesInput").val());
+        state.preventDupGuessesChk = $("#preventDupGuessesChk").prop("checked");
+        state.guessedLettersSpan = [];
+        state.guessedWordsSpan = [];
+        return state;
+      }
+      
+      function setupGameScreen(showPrevGuesses, showHangman) {
+        $("#hangmanImageDiv").html("");
+        $("#hangmanImageDiv").css("background-color", "");
+        $("#guessInputsDiv").show();
+        $("#guessesRemainingSpan").html("");
+        $("#guessedLettersSpan").html("");
+        $("#guessedWordsSpan").html("");
+        $("#errorMessage").html("");
+        $("#guessesRemainingSpan").html(gameState.remainingGuesses);
+      
+        $("#wordDisplayDiv").html(gameState.chosenWord.replace(/./g, '_ ').trim());
+        // If you don't know regular expressions, perhaps the
+        // below line is more understandable.
+        // 
+        //  $("#wordDisplayDiv").html('_ '.repeat(chosenWord.length).trim());
+      
+        if (showPrevGuesses) {
+          $("#prevGuessesDiv").show();
+        } else {
+          $("#prevGuessesDiv").hide();
+        }
+      
+        if (showHangman) {
+          $("#hangmanImageDiv").show();
+        } else {
+          $("#hangmanImageDiv").hide();
+        }
+      }
+      
+      function updateAfterGuess() {
+        // Reset error state (this function shouldn't be called if there is an error).
+        $("#errorMessage").html("");
+      
+        gameState.remainingGuesses--;
+        const guessResult = $("#wordDisplayDiv").html().replaceAll(' ', '');
+        $("#guessesRemainingSpan").html(gameState.remainingGuesses);
+      
+        if (guessResult === gameState.chosenWord) {
+          endGame(true);
+          return;
+        }
+        if (gameState.remainingGuesses === 0) {
+          endGame(false);
+        }
+      }
+      
+      function endGame(isWin) {
+        const hangmanImage = $("#hangmanImageDiv");
+        if (isWin) {
+          hangmanImage.css("background-color", 'green');
+          $("#guessesRemainingSpan").html(`<strong>You win!</strong><br>Score: ${gameState.remainingGuesses}`);
+        } else {
+          hangmanImage.css("background-color", 'red');
+          $("#guessesRemainingSpan").html("<strong>You lose!</strong><br>");
+        }
+        $("#guessInputsDiv").hide();
+      
+        const guessedLetters = $("#wordDisplayDiv").html().trim().split(' ');
+        for (let i = 0; i < gameState.chosenWord.length; i++) {
+          if (guessedLetters[i] === '_') {
+            const unguessedLetter = `<span class="unguessed">${gameState.chosenWord[i]}</span>`;
+            guessedLetters[i] = unguessedLetter;
+          }
+        }
+        $("#wordDisplayDiv").html(guessedLetters.join(' '));
+      }
+      
+      function restartGame() {
+        $("#gameScreenDiv").hide();
+        $("#previewScreenDiv").show("slow");
+      }
+      
+      $(document).ready(function() {
+        $("#startBtn").click(() => startGame());
+        $("#guessLetterBtn").click(() => guessLetter());
+        $("#guessLetterInput").keypress((e) => {
+          if (e.key === "Enter") {
+            guessLetter();
+          }
+        });
+        $("#guessWordBtn").click(() => guessWord());
+        $("#guessWordInput").keypress((e) => {
+          if (e.key === "Enter") {
+            guessWord();
+          }
+        });
+        $("#restartBtn").click(() => restartGame());
+      });
+
+      function guessLetter() {
+        const guess = $("#guessLetterInput").val().toLowerCase();
+        $("#guessLetterInput").val("");
+        $("#guessLetterInput").focus();
+        
+        if (!gameState.guessedLettersSpan.includes(guess)) {
+          gameState.guessedLettersSpan.push(guess);
+          $("#guessedLettersSpan").html(gameState.guessedLettersSpan.join(', '));
+        } else if (gameState.preventDupGuessesChk) {
+          $("#errorMessage").html('You already guessed this letter!');
+          return;
+        }
+        
+        if (gameState.chosenWord.includes(guess)) {
+          let letters = $("#wordDisplayDiv").html().split(' ');
+          console.assert(letters.length === gameState.chosenWord.length); // sanity check
+          for (let i = 0; i < letters.length; i++) {
+            if (gameState.chosenWord[i] === guess) {
+              letters[i] = guess;
+            }
+          }
+          $("#wordDisplayDiv").html(letters.join(' '));
+        }
+        updateAfterGuess();
+      }
+      
+      function guessWord() {
+        const guess = $("#guessWordInput").val().toLowerCase();
+        $("#guessWordInput").val("");
+        $("#guessWordInput").focus();
+        
+        // includes() works since I only allow word guesses of the right
+        // length. Otherwise you'd need to be more careful.
+        if (!gameState.guessedWordsSpan.includes(guess)) {
+          gameState.guessedWordsSpan.push(guess);
+          $("#guessedWordsSpan").html(gameState.guessedWordsSpan.join(', '));
+        } else if (gameState.preventDupGuessesChk) {
+          $("#errorMessage").html('You already guessed this word!');
+          return;
+        }
+        
+        if (guess === gameState.chosenWord) {
+          $("#wordDisplayDiv").html(gameState.chosenWord.split('').join(' '));
+        }
+        
+        updateAfterGuess();
+      }
+
+      async function makeWord() {
+        let word = $("#chosenWordInput").val().toLowerCase().trim();
+        if (!word)
+          word = "quickstart"; // hardcode, will fix in next step
+        return word
+      }
+
+      async function startGame() {
+        gameState = resetState();
+        
+        gameState.chosenWord = await makeWord();
+        console.log(`Chosen word is ${gameState.chosenWord}`);
+        
+        $("#previewScreenDiv").hide();
+        $("#gameScreenDiv").hide();
+      
+        const showPrevGuesses = $("#showPrevGuessesChk").prop("checked");
+        const showHangman = $("#showHangmanChk").prop("checked");
+        setupGameScreen(showPrevGuesses, showHangman);
+        $("#gameScreenDiv").show("slow");
+      }
+    </script>
+  </body>
+</html>

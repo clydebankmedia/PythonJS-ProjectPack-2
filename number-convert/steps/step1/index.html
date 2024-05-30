@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background-color: #f0f0f0;
+      }
+      
+      .container {
+          background-color: white;
+          padding: 20px;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          text-align: center;
+      }
+      
+      input {
+          padding: 5px;
+          width: 100%;
+          margin: 5px 0;
+      }
+    </style>
+    <title>Number Converter</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Number Converter</h1>
+        <label for="binaryInput">Binary:</label>
+        <input type="text" id="binaryInput">
+
+        <label for="decimalInput">Decimal:</label>
+        <input type="text" id="decimalInput">
+
+        <label for="hexInput">Hexadecimal:</label>
+        <input type="text" id="hexInput">
+    </div>
+
+    <script src="convert.js"></script>
+</body>
+</html>

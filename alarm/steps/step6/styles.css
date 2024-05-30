@@ -1,0 +1,30 @@
+body {
+    text-align: center;
+}
+
+#alarmIndicator {
+    margin-bottom: 2rem;
+}
+.blinking-rectangle {
+    width: 10rem;
+    height: 10rem;
+    margin: auto auto 1rem auto;
+    background-color: red;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+input[type='datetime-local']:invalid {
+    border: 3px solid red;
+}

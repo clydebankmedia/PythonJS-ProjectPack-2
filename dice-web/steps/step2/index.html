@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dice Roll Simulator</title>
+</head>
+<body>
+  <h1>Dice Roll Simulator</h1>
+  
+  <form name="diceControlForm">
+    <table id="controls">
+      <tbody>
+        <tr>
+          <td><label for="numDice">Number of dice:</label></td>
+          <td><input type="number" name="numDice" value="1"></td>
+        </tr>
+        <tr>
+          <td><label for="numRolls">Number of rolls:</label></td>
+          <td><input type="number" name="numRolls" value="1"></td>
+        </tr>
+        <tr>
+          <td><label for="numSides">Number of sides:</label></td>
+          <td><input type="number" name="numSides" value="6"></td>
+        </tr>
+      </tbody>  
+    </table>
+    <button type="submit">Simulate</button>
+  </form>
+  
+  <div id="stats">
+  </div>
+  <details>
+    <summary>Results</summary>
+    <ul id="rollList"></ul>
+  </details>
+
+  <script>
+    function rollDie(numSides) {
+      return Math.floor(Math.random() * numSides) + 1;
+    }
+    
+    function roll(numDice, numSides) {
+      // This is concise, but hard for beginners. See if you can figure it out!
+      // return [...Array(numDice).keys()].map(_ => rollDie(numSides));
+      
+      let dice = [];
+      for (let i = 0; i < numDice; i++) {
+        dice.push(rollDie(numSides));
+      }
+      return dice;
+    }
+  </script>
+</body>
+</html>

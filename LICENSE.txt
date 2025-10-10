@@ -1,0 +1,17 @@
+ClydeBank Media Educational Use License  
+Version 1.0 — October 2025  
+
+Copyright © 2025 ClydeBank Media LLC. All rights reserved.  
+
+This repository is provided for educational use by customers and users of ClydeBank Media’s learning programs.
+
+Permissions:
+- You may view, copy, and modify the code in this repository for your own personal, non-commercial learning and experimentation.
+
+Restrictions:
+- You may not redistribute, republish, or share this code or any modified versions publicly.
+- You may not use this code or derivatives for commercial purposes, products, or services.
+- You may not remove or alter this license or any copyright notices.
+
+Disclaimer:
+This code is provided “as is,” without warranty of any kind. ClydeBank Media makes no guarantees regarding fitness for any particular purpose.

@@ -33,3 +33,9 @@ If you encounter any issues, please refer to the book or our support team at the
 📱 Social: <a href="https://www.instagram.com/quickstartguides">Instagram</a> | <a href="https://www.facebook.com/QuickStartGuides/">Facebook</a> | <a href="https://www.linkedin.com/showcase/quickstart-guides/">LinkedIn</a> 
 
 🌐 Website: <a href="https://www.QuickStartGuides.com">www.QuickStartGuides.com</a>
+
+## License
+This repository is licensed under the **ClydeBank Media Educational Use License (Version 1.0)**.  
+You may view, copy, and modify this code for personal learning purposes only.  
+Redistribution or commercial use is prohibited.  
+See [LICENSE.txt](./LICENSE.txt) for details.
